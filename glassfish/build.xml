@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE project [ <!ENTITY common SYSTEM "file:./common.xml">
+
+ ]>
+
+
+<project name="configure-glassfish" default="all" basedir=".">
+ <import file="common.xml"/>
+
+ <target name="init" >
+        <echo message="-----> Initializing project properties" />
+    	
+        
+
+
+<!-- For Use with Oracle XE database -->
+        <property name="system.password" value="debu" />
+
+        <property name="db.username" value="ab" />
+        <property name="db.password" value="ab" />
+        <property name="db.host" value="localhost" />
+        <property name="db.port" value="1521" />
+        <property name="db.name" value="XE" />
+        
+        <property name="jdbc.url" value="jdbc:oracle:thin:@localhost:1521:XE" />
+
+         
+      </target>   
+
+<target name="all" depends="init, CreateDataSourceDerby, CreateJMSResource" >
+  </target>
+
+<target name="configure-xe" depends="init, CreateActionBazaarUser, CreatePoolAndDataSource" >
+  </target>
+
+<!-- create a User for DataSource in  Oracle XE database -->
+<target name="CreateActionBazaarUser" depends="init">
+    <sql rdbms="oracle" driver="oracle.jdbc.OracleDriver"
+         userid="system" password="${system.password}"
+         url="${jdbc.url}"
+         classpath="${J2EE_HOME}/lib/ojdbc14.jar"
+         onerror="continue">
+      drop user ${db.username} cascade;
+        create user ${db.username} identified by ${db.password};
+       grant connect,resource to ${db.username};
+    </sql>
+  </target>
+
+<!-- Drop DataSource -->
+
+  <target name="DropDataSource" depends="init" unless="ee">
+    <echo message="Drop - JDBC Resources " level="verbose"></echo>
+    <exec executable="${J2EE_HOME}/bin/${ASADMIN}" failonerror="false">
+      <arg line=" delete-jdbc-resource"/>
+      <arg line="--user ${admin.user}"/>
+      <arg line="--host ${admin.host}"/>
+      <arg line="--port ${admin.port}"/>
+       <arg line="jdbc/ActionBazaarDS"/>
+    </exec>
+    
+<!-- Drop Connection Pool -->
+
+ <exec executable="${J2EE_HOME}/bin/${ASADMIN}" failonerror="false">
+      <arg line=" delete-jdbc-connection-pool"/>
+      <arg line="--user ${admin.user}"/>
+      <arg line="--host ${admin.host}"/>
+      <arg line="--port ${admin.port}"/>
+       <arg line="abpool"/>
+    </exec>
+  <exec executable="${J2EE_HOME}/bin/${ASADMIN}" failonerror="false">
+      <arg line=" delete-jdbc-resource"/>
+      <arg line="--user ${admin.user}"/>
+      <arg line="--host ${admin.host}"/>
+      <arg line="--port ${admin.port}"/>
+       <arg line="jdbc/TurtleDS"/>
+</exec>
+
+  </target>
+
+<target name="DropDerbyDataSource" depends="init" unless="ee">
+    <echo message="Drop - JDBC Resources " level="verbose"></echo>
+    <exec executable="${J2EE_HOME}/bin/${ASADMIN}" failonerror="false">
+      <arg line=" delete-jdbc-resource"/>
+      <arg line="--user ${admin.user}"/>
+      <arg line="--host ${admin.host}"/>
+      <arg line="--port ${admin.port}"/>
+       <arg line="jdbc/ActionBazaarDS"/>
+    </exec>
+<exec executable="${J2EE_HOME}/bin/${ASADMIN}" failonerror="false">
+      <arg line=" delete-jdbc-resource"/>
+      <arg line="--user ${admin.user}"/>
+      <arg line="--host ${admin.host}"/>
+      <arg line="--port ${admin.port}"/>
+       <arg line="jdbc/TurtleDS"/>
+    </exec>
+</target>
+
+<!-- Create Connection Pool and DataSource -->
+
+  <target name="CreatePoolAndDataSource" depends="DropDataSource">
+    <exec executable="${J2EE_HOME}/bin/${ASADMIN}" failonerror="true"
+          vmlauncher="false">
+      <arg line="create-jdbc-connection-pool --host ${admin.host} --port ${admin.port} --user admin   --datasourceclassname oracle.jdbc.pool.OracleDataSource --restype javax.sql.DataSource --property DataSourceName=OracleDataSource:NetworkProtocol=tcp:DatabaseName=${db.name}:Password=${db.password}:URL=jdbc\:oracle\:thin\:@${db.host}\:${db.port}\:${db.name}:User=${db.username}:ServiceName=${db.name}:PortNumber=${db.port}:ServerName=localhost abpool"/>
+    </exec>
+    <exec executable="${J2EE_HOME}/bin/${ASADMIN}" failonerror="true"
+          vmlauncher="false">
+      <arg line="create-jdbc-resource --host ${admin.host} --port ${admin.port} --user admin   --connectionpoolid abpool jdbc/ActionBazaarDS"/>
+    </exec>
+    <exec executable="${J2EE_HOME}/bin/${ASADMIN}" failonerror="true"
+          vmlauncher="false">
+      <arg line="create-jdbc-resource --host ${admin.host} --port ${admin.port} --user admin --connectionpoolid abpool jdbc/TurtleDS"/>
+    </exec>
+
+
+  </target>
+
+<!-- Create DataSource for Apachy Derby -->
+
+<target name="CreateDataSourceDerby" depends="DropDerbyDataSource">
+     <exec executable="${J2EE_HOME}/bin/${ASADMIN}" failonerror="true"
+          vmlauncher="false">
+      <arg line="create-jdbc-resource --host ${admin.host} --port ${admin.port} --user admin  --connectionpoolid DerbyPool  jdbc/ActionBazaarDS"/>
+    </exec>
+    <exec executable="${J2EE_HOME}/bin/${ASADMIN}" failonerror="true"
+          vmlauncher="false">
+      <arg line="create-jdbc-resource --host ${admin.host} --port ${admin.port} --user admin --connectionpoolid DerbyPool jdbc/TurtleDS"/>
+    </exec>
+
+  </target>
+
+
+<!-- Create JMS Connection Factory and destination -->
+
+ <target name="CreateJMSResource" depends="DropJMSResource">
+    <exec executable="${J2EE_HOME}/bin/${ASADMIN}" failonerror="true"
+          vmlauncher="false">
+      <arg line="create-jms-resource --host ${admin.host} --port ${admin.port} --user admin   --restype javax.jms.QueueConnectionFactory jms/QueueConnectionFactory"/>
+    </exec>
+    <exec executable="${J2EE_HOME}/bin/${ASADMIN}" failonerror="true"
+          vmlauncher="false">
+      <arg line="create-jms-resource --host ${admin.host} --port ${admin.port} --user admin   --restype javax.jms.Queue --property imqDestinationName=OrderBillingQueue OrderBillingQueue"/>
+    </exec>
+  
+    <exec executable="${J2EE_HOME}/bin/${ASADMIN}" failonerror="true"
+          vmlauncher="false">
+      <arg line="create-jms-resource --restype javax.jms.Queue --property imqDestinationName=ShippingRequestQueue ShippingRequestQueue"/>
+    </exec>
+
+  </target>
+
+<!-- Drop JMS Connection Factory and destination -->
+
+ <target name="DropJMSResource" depends="init">
+    <exec executable="${J2EE_HOME}/bin/${ASADMIN}" failonerror="true"
+          vmlauncher="false">
+      <arg line="delete-jms-resource --host ${admin.host} --port ${admin.port} --user admin   jms/QueueConnectionFactory"/>
+    </exec>
+    <exec executable="${J2EE_HOME}/bin/${ASADMIN}" failonerror="true"
+          vmlauncher="false">
+      <arg line="delete-jms-resource --host ${admin.host} --port ${admin.port} --user admin  OrderBillingQueue"/>
+    </exec>
+ <exec executable="${J2EE_HOME}/bin/${ASADMIN}" failonerror="true"
+          vmlauncher="false">
+      <arg line="delete-jms-resource --host ${admin.host} --port ${admin.port} --user admin  ShippingRequestQueue"/>
+    </exec>
+
+  </target>
+
+</project>
