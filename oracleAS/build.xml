@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE project >
+
+
+<project name="configure-oracleas" default="all" basedir="." xmlns:oracle="antlib:oracle" >
+ <import file="ant-oracle.xml"/>
+
+ <target name="init" >
+        <echo message="-----> Initializing project properties" />
+    	
+        
+</target>
+
+
+
+<target name="all" depends="init, CreateActionBazaarUser, CreatePoolAndDataSource, CreateJMSCF, CreateJMSDestination" >
+ <echo message="-----> Configuring Oracle Application Server" />
+  
+</target>
+
+<!-- create a User for DataSource in  Oracle XE database -->
+<target name="CreateActionBazaarUser" depends="init">
+    <sql rdbms="oracle" driver="oracle.jdbc.OracleDriver"
+         userid="system" password="${system.password}"
+         url="${jdbc.url}"
+         classpath="${J2EE_HOME}/lib/ojdbc14.jar"
+         onerror="continue">
+      drop user ${db.username} cascade;
+        create user ${db.username} identified by ${db.password};
+       grant connect,resource to ${db.username};
+    </sql>
+  </target>
+
+
+<target name="DropDataSource">
+        <echo message="-----> Removing Data Source and connection pools"/>
+        
+        <oracle:removeManagedDataSource deployerUri="${deployer.uri}"
+            userId="${oc4j.admin.user}"
+            password="${oc4j.admin.password}"
+            applicationName="default"
+            dataSourceName="ActionBazaarDS"
+            />
+         <oracle:removeManagedDataSource deployerUri="${deployer.uri}"
+            userId="${oc4j.admin.user}"
+            password="${oc4j.admin.password}"
+            applicationName="default"
+            dataSourceName="TurtleDS"
+            />
+
+         <oracle:removeDataSourceConnectionPool deployerUri="${deployer.uri}"
+            userId="${oc4j.admin.user}"
+            password="${oc4j.admin.password}"
+            applicationName="default"
+            name="abConnectionPool"
+            />
+
+    </target>
+
+<!-- Create Connection Pool and DataSource -->
+
+  <target name="CreatePoolAndDataSource" >
+  <echo message="-----> Configuring Data Source"/>
+ 
+     <oracle:addDataSourceConnectionPool deployerUri="${deployer.uri}"
+            userId="${oc4j.admin.user}"
+            password="${oc4j.admin.password}"
+            applicationName="default"
+            name="abConnectionPool"
+            factoryClass="oracle.jdbc.pool.OracleDataSource"
+            dbUser="${db.username}"
+            dbPassword="${db.password}"
+            url="${jdbc.url}"
+            />
+     <oracle:addManagedDataSource deployerUri="${deployer.uri}"
+            userId="${oc4j.admin.user}"
+            password="${oc4j.admin.password}"
+            dataSourceName="ActionBazaarDS"
+            applicationName="default"
+            jndiLocation="jdbc/ActionBazaarDS"
+            connectionPoolName="abConnectionPool"
+            />
+
+<oracle:addManagedDataSource deployerUri="${deployer.uri}"
+            userId="${oc4j.admin.user}"
+            password="${oc4j.admin.password}"
+            dataSourceName="TurtleDS"
+            applicationName="default"
+            jndiLocation="jdbc/TurtleDS"
+            connectionPoolName="abConnectionPool"
+            />
+
+
+
+  </target>
+
+<target name="CreateJMSDestination" 
+    				unless="skip.deploy"
+    		description="Configuring JMS Factory and Destinations">
+       
+         <oracle:addDestination deployerUri="${deployer.uri}"
+            userId="${oc4j.admin.user}"
+            password="${oc4j.admin.password}"
+            name="jms/ShippingRequestQueue"
+            domain="QUEUE"
+            jndiLocation="jms/ShippingRequestQueue"
+           />
+            <oracle:addDestination deployerUri="${deployer.uri}"
+            userId="${oc4j.admin.user}"
+            password="${oc4j.admin.password}"
+            name="jms/OrderBillingQueue"
+            domain="QUEUE"
+            jndiLocation="jms/OrderBillingQueue"
+           />
+
+    </target>
+
+<target name="CreateJMSCF" 
+    				unless="skip.deploy"
+    		description="Configuring JMS Factory and Destinations">
+       
+         <oracle:addJMSConnectionFactory deployerUri="${deployer.uri}"
+            userId="${oc4j.admin.user}"
+            password="${oc4j.admin.password}"
+            domain="QUEUE"
+            jndiLocation="jms/QueueConnectionFactory"
+            />
+         
+    </target>
+
+
+<target name="RemoveJMSResource" 
+    		depends="RemoveJMSCF,RemoveJMSDestination" 
+    		unless="skip.deploy"
+    		description="Removing JMS Factory and Destinations">
+      
+  	
+ </target>
+
+
+<target name="RemoveJMSDestination" 
+    		depends="init" 
+    		unless="skip.deploy"
+    		description="Removing Destinations">
+      
+  	
+     <oracle:removeDestination deployerUri="${deployer.uri}"
+            userId="${oc4j.admin.user}"
+            password="${oc4j.admin.password}"
+            name="jms/ShippingRequestQueue"
+           />
+
+      <oracle:removeDestination deployerUri="${deployer.uri}"
+            userId="${oc4j.admin.user}"
+            password="${oc4j.admin.password}"
+            name="jms/OrderBillingQueue"
+            />   
+  </target>
+<target name="RemoveJMSCF" 
+    		depends="init" 
+    		unless="skip.deploy"
+    		description="Removing JMS Factory and Destinations">
+      
+  
+	<oracle:removeJMSConnectionFactory deployerUri="${deployer.uri}"
+            userId="${oc4j.admin.user}"
+            password="${oc4j.admin.password}"
+            jndiLocation="jms/QueueConnectionFactory"
+            />
+
+         
+  </target>
+
+<target name="cleanup" depends="init,  DropDataSource, RemoveJMSResource" >
+ <echo message="-----> Cleaning up DataSource and JMS Resource from Oracle Application Server" />
+  
+</target>
+
+</project>

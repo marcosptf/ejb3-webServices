@@ -1,0 +1,132 @@
+07/03/09 10:53:33 Notification ==>Uploading file chapter5.ear ...
+
+07/03/09 10:53:33 Notification ==>Application Deployer for chapter5 STARTS.
+
+07/03/09 10:53:33 Notification ==>Copy the archive to D:\oc4j\oc4j10.1.3.1\j2ee\home\applications\chapter5.ear
+
+07/03/09 10:53:33 Notification ==>Initialize D:\oc4j\oc4j10.1.3.1\j2ee\home\applications\chapter5.ear begins...
+
+07/03/09 10:53:33 Notification ==>Removing everything under: D:\oc4j\oc4j10.1.3.1\j2ee\home\applications\chapter5
+
+07/03/09 10:53:33 Notification ==>Unpacking chapter5.ear
+
+07/03/09 10:53:33 Notification ==>Done unpacking chapter5.ear
+
+07/03/09 10:53:33 Notification ==>Initialize D:\oc4j\oc4j10.1.3.1\j2ee\home\applications\chapter5.ear ends...
+
+07/03/09 10:53:33 Notification ==>Starting application : chapter5
+
+07/03/09 10:53:33 Notification ==>Initializing ClassLoader(s)
+
+07/03/09 10:53:33 Notification ==>Initializing EJB container
+
+07/03/09 10:53:33 Notification ==>Loading connector(s)
+
+07/03/09 10:53:34 Notification ==>Starting up resource adapters
+
+07/03/09 10:53:34 Notification ==>Processing EJB module: chapter5-ejb.jar
+
+07/03/09 10:53:34 Notification ==>Initializing EJB sessions
+
+07/03/09 10:53:34 Notification ==>Committing ClassLoader(s)
+
+07/03/09 10:53:34 Notification ==>Started application : chapter5
+
+07/03/09 10:53:34 Notification ==>Application Deployer for chapter5 COMPLETES. Operation time: 331 msecs
+
+07/03/09 10:55:50 Notification ==>Uploading file chapter5.ear ...
+
+07/03/09 10:55:50 Notification ==>Application Deployer for chapter5 STARTS.
+
+07/03/09 10:55:50 Notification ==>Undeploy previous deployment
+
+07/03/09 10:55:50 Notification ==>Initialize D:\oc4j\oc4j10.1.3.1\j2ee\home\applications\chapter5.ear begins...
+
+07/03/09 10:55:51 Notification ==>Initialize D:\oc4j\oc4j10.1.3.1\j2ee\home\applications\chapter5.ear ends...
+
+07/03/09 10:55:51 Notification ==>Starting application : chapter5
+
+07/03/09 10:55:51 Notification ==>Initializing ClassLoader(s)
+
+07/03/09 10:55:51 Notification ==>Initializing EJB container
+
+07/03/09 10:55:51 Notification ==>Loading connector(s)
+
+07/03/09 10:55:51 Notification ==>Starting up resource adapters
+
+07/03/09 10:55:51 Notification ==>Processing EJB module: chapter5-ejb.jar
+
+07/03/09 10:55:51 Notification ==>Compiling EJB generated code
+
+07/03/09 10:55:51 Notification ==>Initializing EJB sessions
+
+07/03/09 10:55:51 Notification ==>Committing ClassLoader(s)
+
+07/03/09 10:55:51 Notification ==>Started application : chapter5
+
+07/03/09 10:55:51 Notification ==>Application Deployer for chapter5 COMPLETES. Operation time: 401 msecs
+
+07/03/09 10:59:23 Notification ==>Uploading file chapter5.ear ...
+
+07/03/09 10:59:23 Notification ==>Application Deployer for chapter5 STARTS.
+
+07/03/09 10:59:23 Notification ==>Undeploy previous deployment
+
+07/03/09 10:59:23 Notification ==>Initialize D:\oc4j\oc4j10.1.3.1\j2ee\home\applications\chapter5.ear begins...
+
+07/03/09 10:59:23 Notification ==>Initialize D:\oc4j\oc4j10.1.3.1\j2ee\home\applications\chapter5.ear ends...
+
+07/03/09 10:59:23 Notification ==>Starting application : chapter5
+
+07/03/09 10:59:23 Notification ==>Initializing ClassLoader(s)
+
+07/03/09 10:59:23 Notification ==>Initializing EJB container
+
+07/03/09 10:59:23 Notification ==>Loading connector(s)
+
+07/03/09 10:59:23 Notification ==>Starting up resource adapters
+
+07/03/09 10:59:23 Notification ==>Processing EJB module: chapter5-ejb.jar
+
+07/03/09 10:59:23 Notification ==>Compiling EJB generated code
+
+07/03/09 10:59:23 Notification ==>Initializing EJB sessions
+
+07/03/09 10:59:23 Notification ==>Committing ClassLoader(s)
+
+07/03/09 10:59:23 Notification ==>Started application : chapter5
+
+07/03/09 10:59:23 Notification ==>Application Deployer for chapter5 COMPLETES. Operation time: 260 msecs
+
+07/03/09 11:02:15 Notification ==>Uploading file chapter5.ear ...
+
+07/03/09 11:02:15 Notification ==>Application Deployer for chapter5 STARTS.
+
+07/03/09 11:02:15 Notification ==>Undeploy previous deployment
+
+07/03/09 11:02:15 Notification ==>Initialize D:\oc4j\oc4j10.1.3.1\j2ee\home\applications\chapter5.ear begins...
+
+07/03/09 11:02:15 Notification ==>Initialize D:\oc4j\oc4j10.1.3.1\j2ee\home\applications\chapter5.ear ends...
+
+07/03/09 11:02:15 Notification ==>Starting application : chapter5
+
+07/03/09 11:02:15 Notification ==>Initializing ClassLoader(s)
+
+07/03/09 11:02:15 Notification ==>Initializing EJB container
+
+07/03/09 11:02:15 Notification ==>Loading connector(s)
+
+07/03/09 11:02:15 Notification ==>Starting up resource adapters
+
+07/03/09 11:02:15 Notification ==>Processing EJB module: chapter5-ejb.jar
+
+07/03/09 11:02:15 Notification ==>Compiling EJB generated code
+
+07/03/09 11:02:15 Notification ==>Initializing EJB sessions
+
+07/03/09 11:02:15 Notification ==>Committing ClassLoader(s)
+
+07/03/09 11:02:15 Notification ==>Started application : chapter5
+
+07/03/09 11:02:15 Notification ==>Application Deployer for chapter5 COMPLETES. Operation time: 220 msecs
+
