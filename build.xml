@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE project [ <!ENTITY common SYSTEM "file:./common.xml">
+
+ ]>
+
+
+<project name="configure-weblogic" default="all" basedir=".">
+ <import file="common.xml"/>
+
+
+
+<!-- Cleanup Resources -->
+
+<target name="CleanUp" >
+<wlconfig
+        username="${admin.user}"
+        password="${admin.password}"
+        url="t3://${admin.host}:${admin.port}"
+         failonerror="false">
+
+<query domain="wl_server" type="JDBCTxDataSource" name="ActionBazaarDataSource"  property="ds" /> 
+<query domain="${domain}" type="JDBCTxDataSource" name="TurtleDataSource" property="ds2" /> 
+
+
+
+<query domain="${domain}" type="JMSServer" name="ABJMSServer" property="jmsserver" /> 
+
+<query domain="${domain}" type="JDBCConnectionPool" name="ABPool" property="abpool" /> 
+</wlconfig>
+
+<wlconfig
+        username="${admin.user}"
+        password="${admin.password}"
+        url="t3://${admin.host}:${admin.port}"
+         failonerror="false">
+
+
+<delete mbean="${ds}"/>
+
+
+<delete mbean="${ds2}"/>
+
+<delete mbean="{abpool}"/>
+
+
+
+<delete mbean="${jmsserver}"/>
+
+</wlconfig>
+ </target>
+
+
+<!-- Create Resources -->
+<target name="CreateResourceswithOracleDB">
+<wlconfig
+        username="${admin.user}"
+        password="${admin.password}"
+        url="t3://${admin.host}:${admin.port}"
+         failonerror="false">
+
+<query domain="wl_server" type="Server" name="examplesServer"
+         property="examplesServer"/>
+
+<!-- Create DataSource -->
+
+   <create type="JDBCConnectionPool" name="ABPool" property="abpool">
+	<set attribute="CapacityIncrement" value="1"/>
+	<set attribute="DriverName" value="oracle.jdbc.xa.client.OracleXADataSource"/>
+	<set attribute="InitialCapacity" value="1"/>
+	<set attribute="MaxCapacity" value="10"/>
+	<set attribute="Password" value="ab"/>
+	<set attribute="Properties" value="user=ab"/>
+	<set attribute="RefreshMinutes" value="0"/>
+	<set attribute="URL" value="jdbc:oracle:thin:@staec36.us.oracle.com:1521:orcl"/>
+	<set attribute="Targets" value="${examplesServer}"/>
+    </create>
+
+<query domain="wl_server" type="JDBCConnectionPool" name="examples-oracleXA"
+         property="examplesPool"/>
+
+<create type="JDBCTxDataSource" name="ActionBazaarDataSource">
+	<set attribute="JNDIName" value="ActionBazaarDS"/>
+	<set attribute="PoolName" value="${examplesPool}"/>
+	<set attribute="Targets" value="${examplesServer}"/>
+</create>
+
+<create type="JDBCTxDataSource" name="TurtleDataSource">
+	<set attribute="JNDIName" value="jdbc/TurtleDS"/>
+	<set attribute="PoolName" value="ABPool"/>
+	<set attribute="Targets" value="${examplesServer}"/>
+ </create>
+
+
+
+<!-- Create JMS Connection Factory and destination -->
+
+
+
+<query domain="wl_server" type="JMSFileStore" name="WseeFileStore" property="filestore" /> 
+
+<create type="JMSServer" name="ABJMSServer">
+	<set attribute="Store" value="${filestore}"/>
+	<set attribute="Targets" value="${examplesServer}"/>
+	<create type="JMSQueue" name="OrderBilling Queue">
+		<set attribute="JNDIName" value="jms/OrderBillingQueue"/>
+	</create>
+	<create type="JMSQueue" name="ShippingRequestQueue">
+		<set attribute="JNDIName" value="jms/ShippingRequestQueue"/>
+	</create>
+</create>
+</wlconfig>
+ </target>
+
+
+<!-- Create Resources -->
+<target name="CreateResources" >
+<wlconfig
+        username="${admin.user}"
+        password="${admin.password}"
+        url="t3://${admin.host}:${admin.port}"
+         failonerror="false">
+
+<query domain="wl_server" type="Server" name="examplesServer"
+         property="examplesServer"/>
+
+<!-- Create DataSource -->
+
+   <create type="JDBCConnectionPool" name="ABPool" property="abpool">
+	<set attribute="CapacityIncrement" value="1"/>
+	<set attribute="DriverName" value="com.pointbase.jdbc.jdbcUniversalDriver"/>
+	<set attribute="InitialCapacity" value="1"/>
+	<set attribute="MaxCapacity" value="10"/>
+	<set attribute="Password" value="examples"/>
+	<set attribute="Properties" value="user=examples"/>
+	<set attribute="RefreshMinutes" value="0"/>
+	<set attribute="ShrinkPeriodMinutes" value="15"/>
+	<set attribute="ShrinkingEnabled" value="true"/>
+	<set attribute="TestConnectionsOnRelease" value="false"/>
+	<set attribute="TestConnectionsOnReserve" value="false"/>
+	<set attribute="URL" value="jdbc:pointbase:server://localhost:9092/demo"/>
+	<set attribute="Targets" value="${examplesServer}"/>
+    </create>
+
+<create type="JDBCTxDataSource" name="ActionBazaarDataSource">
+	<set attribute="JNDIName" value="ActionBazaarDS"/>
+	<set attribute="PoolName" value="ABPool"/>
+	<set attribute="Targets" value="${examplesServer}"/>
+</create>
+
+<create type="JDBCTxDataSource" name="TurtleDataSource">
+	<set attribute="JNDIName" value="jdbc/TurtleDS"/>
+	<set attribute="PoolName" value="ABPool"/>
+	<set attribute="Targets" value="${examplesServer}"/>
+ </create>
+
+
+
+<!-- Create JMS Connection Factory and destination -->
+
+
+
+<query domain="wl_server" type="JMSJDBCStore" name="exampleJDBCStore" property="jdbcstore" /> 
+
+<create type="JMSServer" name="ABJMSServer">
+	<set attribute="Store" value="${jdbcstore}"/>
+	<set attribute="Targets" value="${examplesServer}"/>
+	<create type="JMSQueue" name="OrderBilling Queue">
+		<set attribute="JNDIName" value="jms/OrderBillingQueue"/>
+	</create>
+	<create type="JMSQueue" name="ShippingRequestQueue">
+		<set attribute="JNDIName" value="jms/ShippingRequestQueue"/>
+	</create>
+</create>
+</wlconfig>
+</target>
+
+</project>
