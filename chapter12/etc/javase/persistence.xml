@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
+    http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
+            version="1.0">
+<persistence-unit name="actionBazaar" transaction-type="RESOURCE_LOCAL">
+        <class>actionbazaar.persistence.Bid</class>
+        <class>actionbazaar.persistence.Item</class>
+        <class>actionbazaar.persistence.User</class>
+	  <class>actionbazaar.persistence.Bidder</class>
+        <exclude-unlisted-classes>false</exclude-unlisted-classes>
+   <properties>
+      <property name="kodo.ConnectionURL" value="jdbc:pointbase:server://localhost:9092/demo"/>
+      <property name="kodo.ConnectionDriverName" value="com.pointbase.jdbc.jdbcUniversalDriver"/>
+      <property name="kodo.ConnectionUserName" value="examples"/>
+      <property name="kodo.ConnectionPassword" value="examples"/>
+      <property name="kodo.jdbc.SynchronizeMappings" value="refresh"/>
+ </properties>
+    </persistence-unit>
+</persistence>
