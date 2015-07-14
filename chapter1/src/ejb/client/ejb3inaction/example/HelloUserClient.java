@@ -14,7 +14,7 @@ public class HelloUserClient{
           System.out.println("Invoking EJB");     
           try {
               Context ctx = new InitialContext();
-                                        /* syntax:NameOfInterface#Package.name.Interface  */
+              /* syntax:NameOfInterface#Package.name.Interface  */
               helloUser = (HelloUser) ctx.lookup("HelloUser#ejb3inaction.example.HelloUser");
               /* calling method implemented for HelloUserBean */
               helloUser.sayHello("Curious George");
