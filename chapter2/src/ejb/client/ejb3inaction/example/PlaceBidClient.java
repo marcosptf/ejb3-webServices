@@ -1,3 +1,5 @@
+
+
 package ejb3inaction.example.buslogic;
 import javax.naming.Context;
 import javax.naming.InitialContext;
